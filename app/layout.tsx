@@ -1,8 +1,5 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
 import Sidebar from '@/components/Sidebar'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Zattar CRM - Dashboard',
@@ -16,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
+      <body className="font-sans antialiased">
         <div className="flex h-screen bg-gray-50">
           <Sidebar />
           <main className="flex-1 overflow-y-auto">
