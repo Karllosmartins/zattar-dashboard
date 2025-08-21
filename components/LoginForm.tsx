@@ -34,11 +34,11 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <Image
-            className="h-12 w-auto"
-            src="/mysellers-logo.png"
+            className="h-16 w-auto"
+            src="/MySellers-Marca-03-vertical.png"
             alt="MySellers"
             width={200}
-            height={48}
+            height={64}
             priority
           />
         </div>
@@ -128,17 +128,6 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
             </div>
           </form>
 
-          <div className="mt-6">
-            <div className="text-center">
-              <div className="text-sm text-gray-600">
-                <strong>Usuário Admin Padrão:</strong>
-              </div>
-              <div className="text-xs text-gray-500 mt-1">
-                Email: admin@mysellers.com.br<br />
-                Senha: MySellers@2024
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
