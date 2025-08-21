@@ -1,9 +1,9 @@
 import './globals.css'
-import Sidebar from '@/components/Sidebar'
+import AuthWrapper from '@/components/AuthWrapper'
 
 export const metadata = {
-  title: 'Zattar CRM - Dashboard',
-  description: 'Sistema de análise de leads e campanhas',
+  title: 'MySellers Dashboard',
+  description: 'Sistema de análise de leads e campanhas MySellers',
 }
 
 export default function RootLayout({
@@ -14,14 +14,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="font-sans antialiased">
-        <div className="flex h-screen bg-gray-50">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto">
-            <div className="p-8">
-              {children}
-            </div>
-          </main>
-        </div>
+        <AuthWrapper>
+          {children}
+        </AuthWrapper>
       </body>
     </html>
   )
