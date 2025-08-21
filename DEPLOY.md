@@ -116,18 +116,28 @@ docker logs zattar-dashboard -f
 docker ps | grep zattar
 ```
 
-## 🌐 5. Configuração de Domínio
+## 🌐 5. Configuração de Domínio - dashzattar.mysellers.com.br
 
-Se usar proxy reverso (Nginx/Traefik):
+O docker-compose.yml já está configurado para Traefik com SSL automático.
 
-**nginx.conf:**
+**Configurações incluídas:**
+- ✅ Domínio: `dashzattar.mysellers.com.br`
+- ✅ SSL automático via Let's Encrypt
+- ✅ Redirecionamento HTTPS
+
+**Pré-requisitos:**
+1. DNS apontando para sua VPS
+2. Traefik rodando na VPS (rede `web`)
+3. Certificado SSL será gerado automaticamente
+
+**Se usar Nginx Proxy Manager:**
 ```nginx
 server {
     listen 80;
-    server_name zattar.seudominio.com;
+    server_name dashzattar.mysellers.com.br;
     
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://zattar-dashboard:3000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }
