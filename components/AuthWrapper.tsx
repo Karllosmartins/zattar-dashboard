@@ -29,6 +29,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   useEffect(() => {
     // Verificar se há usuário logado
     const currentUser = authService.getCurrentUser()
+    console.log('Usuario atual:', currentUser) // Debug
     setUser(currentUser)
     setLoading(false)
   }, [])

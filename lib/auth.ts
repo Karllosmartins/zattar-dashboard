@@ -62,12 +62,17 @@ export const authService = {
   },
 
   getCurrentUser(): User | null {
-    if (typeof window === 'undefined') return null
+    if (typeof window === 'undefined') {
+      console.log('Window undefined - SSR')
+      return null
+    }
     
     try {
       const userStr = localStorage.getItem('auth_user')
+      console.log('User string from localStorage:', userStr)
       return userStr ? JSON.parse(userStr) : null
-    } catch {
+    } catch (error) {
+      console.error('Erro ao recuperar usuário:', error)
       return null
     }
   },
