@@ -3,14 +3,23 @@ version: "3.7"
 services:
   # Define o serviço do Zattar Dashboard
   zattar-dashboard:
-    # Usa uma imagem pré-buildada do Node.js
-    image: karllosmartins/zattar-dashboard:latest
+    # Usa imagem Node.js 20 Alpine
+    image: node:20-alpine
+    # Define o diretório de trabalho
+    working_dir: /app
+    # Define o comando otimizado
+    command: |
+      sh -c "
+        apk add --no-cache git curl &&
+        git clone https://github.com/Karllosmartins/zattar-dashboard.git . &&
+        npm ci --only=production &&
+        npm install --save-dev typescript @types/node tailwindcss postcss autoprefixer &&
+        npm run build &&
+        npm start
+      "
     # Define a rede que o container vai usar
     networks:
       - network_swarm_public
-    # Define as variáveis de ambiente que o container vai usar
-    environment:
-      - NODE_ENV=production
     deploy:
       # Define o modo de deploy do container
       mode: replicated
@@ -22,7 +31,7 @@ services:
           - node.role == manager
       resources:
         limits:
-          # Aumentar recursos para evitar travamento
+          # Recursos aumentados para build
           cpus: "1"
           memory: 1024M
       labels:
