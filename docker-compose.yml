@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  zattar-dashboard:
+    build: .
+    container_name: zattar-dashboard
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - zattar-network
+
+networks:
+  zattar-network:
+    driver: bridge
