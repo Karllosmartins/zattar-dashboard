@@ -3,27 +3,14 @@ version: "3.7"
 services:
   # Define o serviço do Zattar Dashboard
   zattar-dashboard:
-    # Usa a imagem do Node.js 20 Alpine
-    image: node:20-alpine
-    # Define o hostname do container
-    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
-    # Define o diretório de trabalho
-    working_dir: /app
-    # Define o comando de inicialização
-    command: |
-      sh -c "
-        apk add --no-cache git &&
-        git clone https://github.com/Karllosmartins/zattar-dashboard.git . &&
-        NODE_ENV=development npm install &&
-        npm run build &&
-        NODE_ENV=production npm start
-      "
+    # Usa uma imagem pré-buildada do Node.js
+    image: karllosmartins/zattar-dashboard:latest
     # Define a rede que o container vai usar
     networks:
       - network_swarm_public
     # Define as variáveis de ambiente que o container vai usar
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
     deploy:
       # Define o modo de deploy do container
       mode: replicated
@@ -35,10 +22,9 @@ services:
           - node.role == manager
       resources:
         limits:
-          # Define a quantidade de CPU para o Dashboard para evitar travamento do Host
-          cpus: "0.5"
-          # Define a quantidade de RAM para o Dashboard para evitar travamento do Host
-          memory: 512M
+          # Aumentar recursos para evitar travamento
+          cpus: "1"
+          memory: 1024M
       labels:
         # Habilita o Traefik
         - traefik.enable=true
