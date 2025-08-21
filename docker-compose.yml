@@ -1,9 +1,15 @@
-version: '3.8'
+version: "3.7"
 
 services:
+  # Define o serviço do Zattar Dashboard
   zattar-dashboard:
-    image: node:18-alpine
+    # Usa a imagem do Node.js 20 Alpine
+    image: node:20-alpine
+    # Define o hostname do container
+    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
+    # Define o diretório de trabalho
     working_dir: /app
+    # Define o comando de inicialização
     command: |
       sh -c "
         apk add --no-cache git &&
@@ -12,9 +18,45 @@ services:
         npm run build &&
         NODE_ENV=production npm start
       "
-    ports:
-      - "3000:3000"
+    # Define a rede que o container vai usar
+    networks:
+      - network_swarm_public
+    # Define as variáveis de ambiente que o container vai usar
+    environment:
+      - NODE_ENV=production
     deploy:
+      # Define o modo de deploy do container
+      mode: replicated
+      # Define o número de replicas do container (sempre 1)
       replicas: 1
-      restart_policy:
-        condition: on-failure
+      # Define o local de execução do container
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          # Define a quantidade de CPU para o Dashboard para evitar travamento do Host
+          cpus: "0.5"
+          # Define a quantidade de RAM para o Dashboard para evitar travamento do Host
+          memory: 512M
+      labels:
+        # Habilita o Traefik
+        - traefik.enable=true
+        # Define o endereço público do Dashboard
+        - traefik.http.routers.zattar_dashboard.rule=Host(`dashzattar.mysellers.com.br`)
+        # Redireciona o endereço para HTTPS
+        - traefik.http.routers.zattar_dashboard.entrypoints=websecure
+        # Define o certificado SSL
+        - traefik.http.routers.zattar_dashboard.tls.certresolver=letsencryptresolver
+        # Define a porta do servidor do Dashboard
+        - traefik.http.services.zattar_dashboard.loadbalancer.server.port=3000
+        # Define os Headers que o Dashboard vai usar
+        - traefik.http.services.zattar_dashboard.loadbalancer.passHostHeader=true
+        # Define o serviço que irá ser usado
+        - traefik.http.routers.zattar_dashboard.service=zattar_dashboard
+
+# Definição dos Network do Stack
+networks:
+  network_swarm_public:
+    external: true
+    name: network_swarm_public
