@@ -17,6 +17,8 @@ export interface AuthState {
 export const authService = {
   async signIn(email: string, password: string) {
     try {
+      console.log('Tentativa de login:', email)
+      
       // Verificar se o usuário existe na tabela users
       const { data: userData, error: userError } = await supabase
         .from('users')
@@ -25,14 +27,21 @@ export const authService = {
         .eq('active', true)
         .single()
 
+      console.log('Resultado da busca no Supabase:', { userData, userError })
+
       if (userError || !userData) {
+        console.error('Usuário não encontrado:', userError)
         throw new Error('Usuário não encontrado ou inativo')
       }
 
       // Verificar senha (simplificado - em produção usar hash)
+      console.log('Verificando senha...')
       if (userData.password !== password) {
+        console.error('Senha incorreta')
         throw new Error('Senha incorreta')
       }
+
+      console.log('Login bem-sucedido!')
 
       // Criar sessão local
       const user: User = {
@@ -51,6 +60,7 @@ export const authService = {
 
       return { user, error: null }
     } catch (error) {
+      console.error('Erro no processo de login:', error)
       return { user: null, error: error instanceof Error ? error.message : 'Erro ao fazer login' }
     }
   },
